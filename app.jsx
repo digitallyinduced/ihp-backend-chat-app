@@ -5,37 +5,38 @@ function useCurrentUser() {
     const [currentUser, setCurrentUser] = useState(null);
     useEffect(async () => {
         setCurrentUser(await getCurrentUser());
-    });
+    }, []);
     return currentUser;
 }
 
 function useQueryResult(queryBuilder) {
-    const [records, setRecords] = useState(null);
+    const [records, setRecords] = useState([]);
 
     useEffect(() => {
         const dataSubscription = new DataSubscription(queryBuilder.query);
 
         dataSubscription.onReady = setRecords;
         dataSubscription.onUpdate = (id, changeSet) => {
-            for (const record of records) {
-                if (record.id === id) {
-                    Object.assign(record, changeSet);
-                    break;
+            setRecords(records => {
+                for (const record of records) {
+                    if (record.id === id) {
+                        Object.assign(record, changeSet);
+                        break;
+                    }
                 }
-            }
 
-            setRecords(records);
+                return records;
+            });
         }
         dataSubscription.onCreate = newRecord => {
-            records.push(newRecord);
-            setRecords(records);
+            setRecords(records => [...records, newRecord]);
         };
         dataSubscription.onDelete = id => {
-            setRecords(records.filter(record => record.id !== id));
+            setRecords(records => records.filter(record => record.id !== id));
         };
 
         return () => { dataSubscription.close() };
-    })
+    }, [])
 
     return records;
 }
@@ -156,7 +157,7 @@ function groupMessages(messages) {
 }
 
 initIHPBackend({
-    host: 'https://drwobkmlzxsznonhjfcinzanomybzone.di1337.com'
+    host: 'https://yvloxjqmthzmphqmeycjrtaayhzjmsco.di1337.com'
 })
 
 ReactDOM.render(<Chat/>, document.getElementById('app'));
