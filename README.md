@@ -1,6 +1,6 @@
 # Chat Example App built with IHP Backend
 
-Try it out on https://XXX.vercel.app/
+Try it out on https://ihp-backend-chat-app.vercel.app/
 
 ## Running locally
 
