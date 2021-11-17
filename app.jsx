@@ -1,46 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as ReactDOM from 'react-dom'
 
-function useCurrentUser() {
-    const [currentUser, setCurrentUser] = useState(null);
-    useEffect(async () => {
-        setCurrentUser(await getCurrentUser());
-    }, []);
-    return currentUser;
-}
-
-function useQueryResult(queryBuilder) {
-    const [records, setRecords] = useState([]);
-
-    useEffect(() => {
-        const dataSubscription = new DataSubscription(queryBuilder.query);
-
-        dataSubscription.onReady = setRecords;
-        dataSubscription.onUpdate = (id, changeSet) => {
-            setRecords(records => {
-                for (const record of records) {
-                    if (record.id === id) {
-                        Object.assign(record, changeSet);
-                        break;
-                    }
-                }
-
-                return records;
-            });
-        }
-        dataSubscription.onCreate = newRecord => {
-            setRecords(records => [...records, newRecord]);
-        };
-        dataSubscription.onDelete = id => {
-            setRecords(records => records.filter(record => record.id !== id));
-        };
-
-        return () => { dataSubscription.close() };
-    }, [])
-
-    return records;
-}
-
 function Chat() {
     const messages = useQueryResult(query('messages').orderBy('createdAt'));
     const user = useCurrentUser();
@@ -156,8 +116,54 @@ function groupMessages(messages) {
     return messageSections;
 }
 
-initIHPBackend({
-    host: 'https://yvloxjqmthzmphqmeycjrtaayhzjmsco.di1337.com'
-})
+/** COPY FROM https://github.com/digitallyinduced/ihp/blob/master/lib/IHP/static/vendor/ihp-datasync-react.js */
+function useCurrentUser() {
+    const [currentUser, setCurrentUser] = useState(null);
+    useEffect(async () => {
+        setCurrentUser(await getCurrentUser());
+    }, []);
+    return currentUser;
+}
 
-ReactDOM.render(<Chat/>, document.getElementById('app'));
+function useQueryResult(queryBuilder) {
+    const [records, setRecords] = useState(null);
+
+    useEffect(() => {
+        const dataSubscription = new DataSubscription(queryBuilder.query);
+
+        dataSubscription.onReady = setRecords;
+        dataSubscription.onUpdate = (id, changeSet) => {
+            setRecords(records => {
+                for (const record of records) {
+                    if (record.id === id) {
+                        Object.assign(record, changeSet);
+                        break;
+                    }
+                }
+
+                return [...records];
+            });
+        }
+        dataSubscription.onCreate = newRecord => {
+            setRecords(records => [...records, newRecord]);
+        };
+        dataSubscription.onDelete = id => {
+            setRecords(records => records.filter(record => record.id !== id));
+        };
+
+        return () => { dataSubscription.close() };
+    }, [])
+
+    return records;
+}
+/** END OF COPY **/
+
+initIHPBackend({
+    host: 'https://fhpyvtirpfcnntclbyzgieuebacqcznb.di1337.com'
+});
+
+(async () => {
+    await ensureIsUser();
+
+    ReactDOM.render(<Chat/>, document.getElementById('app'));
+})();
