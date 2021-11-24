@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom'
 import { initIHPBackend, DataSubscription } from 'ihp-datasync/ihp-datasync.js';
 import { query, createRecord } from 'ihp-datasync/ihp-querybuilder.js';
 import { useQueryResult } from 'ihp-datasync/ihp-datasync-react';
-import { ensureIsUser, getCurrentUserId, useCurrentUser } from 'ihp-backend';
+import { ensureIsUser, getCurrentUserId, useCurrentUser, logout } from 'ihp-backend';
 
 function Chat() {
     const messages = useQueryResult(query('messages').orderBy('createdAt'));
