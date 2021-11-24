@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import * as ReactDOM from 'react-dom'
+import { initIHPBackend, DataSubscription } from 'ihp-datasync/ihp-datasync.js';
+import { query, createRecord } from 'ihp-datasync/ihp-querybuilder.js';
+import { useQueryResult } from 'ihp-datasync/ihp-datasync-react';
+import { ensureIsUser, getCurrentUserId, useCurrentUser } from 'ihp-backend';
 
 function Chat() {
     const messages = useQueryResult(query('messages').orderBy('createdAt'));
@@ -116,50 +120,8 @@ function groupMessages(messages) {
     return messageSections;
 }
 
-/** COPY FROM https://github.com/digitallyinduced/ihp/blob/master/lib/IHP/static/vendor/ihp-datasync-react.js */
-function useCurrentUser() {
-    const [currentUser, setCurrentUser] = useState(null);
-    useEffect(async () => {
-        setCurrentUser(await getCurrentUser());
-    }, []);
-    return currentUser;
-}
-
-function useQueryResult(queryBuilder) {
-    const [records, setRecords] = useState(null);
-
-    useEffect(() => {
-        const dataSubscription = new DataSubscription(queryBuilder.query);
-
-        dataSubscription.onReady = setRecords;
-        dataSubscription.onUpdate = (id, changeSet) => {
-            setRecords(records => {
-                for (const record of records) {
-                    if (record.id === id) {
-                        Object.assign(record, changeSet);
-                        break;
-                    }
-                }
-
-                return [...records];
-            });
-        }
-        dataSubscription.onCreate = newRecord => {
-            setRecords(records => [...records, newRecord]);
-        };
-        dataSubscription.onDelete = id => {
-            setRecords(records => records.filter(record => record.id !== id));
-        };
-
-        return () => { dataSubscription.close() };
-    }, [])
-
-    return records;
-}
-/** END OF COPY **/
-
 initIHPBackend({
-    host: 'https://fhpyvtirpfcnntclbyzgieuebacqcznb.di1337.com'
+    host: 'https://bufsdidjdjbvdrgxnnuwplssrfbxwkun.di1337.com'
 });
 
 (async () => {
