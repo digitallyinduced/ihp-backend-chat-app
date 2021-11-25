@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import * as ReactDOM from 'react-dom'
 import { initIHPBackend, DataSubscription } from 'ihp-datasync/ihp-datasync.js';
 import { query, createRecord } from 'ihp-datasync/ihp-querybuilder.js';
-import { useQueryResult } from 'ihp-datasync/ihp-datasync-react';
+import { useQuery } from 'ihp-datasync/ihp-datasync-react';
 import { ensureIsUser, getCurrentUserId, useCurrentUser, logout } from 'ihp-backend';
 
 function Chat() {
-    const messages = useQueryResult(query('messages').orderBy('createdAt'));
+    const messages = useQuery(query('messages').orderBy('createdAt'));
     const user = useCurrentUser();
     
     if (messages === null) {

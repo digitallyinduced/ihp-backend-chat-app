@@ -10,7 +10,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "serve": "^12.0.1",
-    "ihp-datasync": "https://gitpkg.now.sh/digitallyinduced/ihp/lib/IHP/DataSync?9acfec81b956604df3f83722921272ae030766f7",
+    "ihp-datasync": "https://gitpkg.now.sh/digitallyinduced/ihp/lib/IHP/DataSync?a0826137459638ee2cb884d8396c58caa40a63a3",
     "ihp-backend": "https://ihpbackend.digitallyinduced.com/ihp-backend.tar.gz?88d4d87659bdf3bd29aae3de21f4ee6e9053d08b"
   },
   "scripts": {
